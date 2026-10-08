@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diagnóstico de Seguridad Psicológica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,700&display=swap">
+<style>
+/* Layout: slide-like header (actividad + título morado itálico), preguntas a la izquierda, panel morado "Cómo responder" + resultado a la derecha; franjas de color en el borde izquierdo como en la portada del taller. */
+:root{
+  --purple:#5B3BE0;
+  --purple-deep:#4327C2;
+  --teal:#22E3CC;
+  --yellow:#FFD83D;
+  --blue:#3346F0;
+  --bg:#FFFFFF;
+  --row:#EFECFB;
+  --row-alt:#FFFFFF;
+  --ink:#16142A;
+  --muted:#5E5A78;
+  --line:#DCD6F5;
+  --panel-ink:#FFFFFF;
+  --chip-bg:#FFFFFF;
+  --chip-ink:#3A3556;
+  --good:#12A88F;
+  --warn:#D99A00;
+  --crit:#D9465B;
+  --font:Arial,"Arimo","Helvetica Neue",Helvetica,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --purple:#8E76FF;--purple-deep:#4A2FC9;--teal:#3BEBD6;--yellow:#FFD83D;--blue:#5B6BFF;
+  --bg:#121027;--row:#1E1A3D;--row-alt:#17142F;--ink:#F1EFFF;--muted:#A9A3CC;--line:#2E2858;
+  --panel-ink:#FFFFFF;--chip-bg:#251F4C;--chip-ink:#E3DFFF;--good:#2FD3B6;--warn:#F2B829;--crit:#FF6B80;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --purple:#8E76FF;--purple-deep:#4A2FC9;--teal:#3BEBD6;--yellow:#FFD83D;--blue:#5B6BFF;
+  --bg:#121027;--row:#1E1A3D;--row-alt:#17142F;--ink:#F1EFFF;--muted:#A9A3CC;--line:#2E2858;
+  --panel-ink:#FFFFFF;--chip-bg:#251F4C;--chip-ink:#E3DFFF;--good:#2FD3B6;--warn:#F2B829;--crit:#FF6B80;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45}
+.stripes{position:fixed;left:0;top:0;bottom:0;width:8px;display:flex;flex-direction:column;z-index:1}
+.stripes span{flex:1}
+.stripes span:nth-child(1){background:var(--blue)}
+.stripes span:nth-child(2){background:var(--yellow)}
+.stripes span:nth-child(3){background:var(--teal)}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:clamp(20px,4vw,48px);padding-block:32px 48px}
+
+header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.eyebrow{font-weight:700;font-size:clamp(24px,3.2vw,34px);letter-spacing:.01em;margin:0}
+h1{margin:0;font-size:clamp(30px,4.8vw,48px);font-weight:700;font-style:italic;color:var(--purple);line-height:1.1;text-wrap:balance}
+.lede{margin:12px 0 0;color:var(--muted);max-width:100ch}
+.logo{display:flex;align-items:center;background:#FFFFFF;border-radius:12px;padding:4px 8px}
+.logo img{display:block;width:260px;height:auto}
+@media (max-width:520px){.logo img{width:200px}}
+.lede + .lede{margin-top:8px}
+.credit{font-size:13px}
+.credit b{color:var(--purple)}
+header.top > div:first-child{flex:1 1 420px;min-width:0}
+.legend{border:2px solid var(--line);border-radius:14px;padding:20px;background:var(--bg)}
+.legend h2{margin:0 0 12px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.legend ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.legend li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px;align-items:start}
+.legend .dot{width:14px;height:14px;border-radius:50%;margin-top:2px}
+.legend .dot.hi{background:var(--good)}.legend .dot.mid{background:var(--warn)}.legend .dot.lo{background:var(--crit)}
+.legend b{font-size:15px}
+.legend em{font-style:normal;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.legend li p{margin:3px 0 0;font-size:13px}
+.legend .note{margin:12px 0 0;font-size:11.5px;color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;margin-top:28px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+
+ol.items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.item{background:var(--row);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:30px minmax(0,1fr);gap:4px 14px;border:2px solid transparent;transition:border-color .2s}
+.item:nth-child(even){background:var(--row-alt);border-color:var(--line)}
+.item.done{border-color:var(--purple)}
+.num{width:30px;height:30px;border-radius:50%;background:var(--purple);color:#fff;font-weight:700;font-size:13px;display:grid;place-items:center;grid-row:span 2}
+.item.done .num{background:var(--teal);color:#16142A}
+.q{margin:4px 0 0;font-size:15.5px}
+.inv{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:999px;background:var(--yellow);color:#16142A;margin-left:6px;vertical-align:2px;cursor:help}
+fieldset{border:0;margin:10px 0 0;padding:0;min-width:0}
+legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.scale{display:grid;grid-template-columns:auto repeat(7,minmax(0,1fr)) auto;gap:6px;align-items:center}
+.scale .end{font-size:11px;color:var(--muted);line-height:1.15;max-width:76px}
+.scale .end.r{text-align:right}
+.scale input{position:absolute;opacity:0;pointer-events:none}
+.scale label.opt{display:grid;place-items:center;height:38px;border-radius:9px;background:var(--chip-bg);color:var(--chip-ink);border:1.5px solid var(--line);font-weight:700;cursor:pointer;font-variant-numeric:tabular-nums;transition:transform .12s,background .15s,color .15s,border-color .15s}
+.scale label.opt:hover{border-color:var(--purple);transform:translateY(-1px)}
+.scale input:checked + label.opt{background:var(--purple);border-color:var(--purple);color:#fff}
+.scale input:focus-visible + label.opt{outline:3px solid var(--teal);outline-offset:2px}
+@media (max-width:520px){
+  .scale{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .scale .end{grid-row:2;font-size:10.5px;max-width:none}
+  .scale .end.l{grid-column:1 / span 3}
+  .scale .end.r{grid-column:5 / span 3}
+  .item{grid-template-columns:1fr}
+  .num{grid-row:auto}
+}
+
+aside{display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}
+@media (max-width:860px){aside{position:static}}
+.pill{align-self:flex-start;background:var(--yellow);color:#16142A;font-weight:700;font-size:13px;letter-spacing:.06em;padding:9px 16px;border-radius:999px;border:0;cursor:pointer;font-family:var(--font);font-variant-numeric:tabular-nums}
+.pill:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.pill.running{background:var(--teal)}
+.pill.over{background:var(--crit);color:#fff}
+.panel{background:var(--purple-deep);color:var(--panel-ink);border-radius:14px;padding:20px}
+.panel h2{margin:0 0 10px;color:var(--teal);font-size:18px}
+.panel p{margin:0 0 10px;font-size:14px}
+.panel p:last-child{margin:0}
+.progress{display:flex;gap:4px;margin-top:4px}
+.progress i{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.22)}
+.progress i.on{background:var(--teal)}
+.count{font-size:12px;opacity:.85;margin-top:6px;font-variant-numeric:tabular-nums}
+
+.result{border:2px solid var(--line);border-radius:14px;padding:20px;background:var(--bg)}
+.result h2{margin:0;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.score{display:flex;align-items:baseline;gap:8px;margin-top:8px;font-variant-numeric:tabular-nums}
+.score strong{font-size:52px;line-height:1;color:var(--purple)}
+.score span{color:var(--muted);font-size:15px}
+.band{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:999px;font-weight:700;font-size:13px;color:#fff}
+.band.hi{background:var(--good)}.band.mid{background:var(--warn);color:#16142A}.band.lo{background:var(--crit)}
+.meter{position:relative;height:10px;border-radius:5px;margin-top:14px;background:linear-gradient(90deg,var(--crit) 0 50%,var(--warn) 50% 75%,var(--good) 75% 100%)}
+.meter b{position:absolute;top:-5px;width:4px;height:20px;border-radius:2px;background:var(--ink);transform:translateX(-50%);transition:left .4s}
+.ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.msg{margin:12px 0 0;font-size:14px}
+.pending{color:var(--muted);font-size:14px;margin:8px 0 0}
+
+.bars{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.bars li{display:grid;grid-template-columns:22px minmax(0,1fr) 22px;gap:8px;align-items:center;font-size:12px;font-variant-numeric:tabular-nums}
+.bars .track{height:8px;border-radius:4px;background:var(--row);overflow:hidden}
+.bars .fill{height:100%;background:var(--purple);border-radius:4px;transition:width .4s}
+.bars li.low .fill{background:var(--crit)}
+.bars li span:first-child{color:var(--muted)}
+.bars li span:last-child{text-align:right;font-weight:700}
+.reflect{margin:14px 0 0;padding:12px;border-radius:10px;background:var(--row);font-size:13.5px}
+.reflect b{color:var(--purple)}
+.reset{margin-top:12px;background:none;border:1.5px solid var(--line);color:var(--ink);padding:8px 14px;border-radius:999px;font:700 13px var(--font);cursor:pointer}
+.reset:hover{border-color:var(--purple);color:var(--purple)}
+.reset:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+
+footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body style="margin:0">
+
+<div class="stripes" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Diagnóstico de Seguridad Psicológica</h1>
+      <p class="lede">La seguridad psicológica es la creencia compartida de que en un equipo se puede hablar, preguntar, equivocarse y proponer ideas sin temor a ser juzgado o castigado. Es la base para que un grupo aprenda, innove y converse con franqueza.</p>
+      <p class="lede">Este diagnóstico te invita a mirar cómo vives hoy esa seguridad en tu equipo a través de 7 afirmaciones. No hay respuestas correctas: responde pensando en tu experiencia real de las últimas semanas. Al final verás tu puntaje, tu nivel y el aspecto que más vale la pena explorar. Las afirmaciones están basadas en la escala de seguridad psicológica de Amy Edmondson (1999).</p>
+      <p class="lede credit">Diagnóstico diseñado por <b>Brando Maco</b>.</p>
+    </div>
+    <div class="logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAACECAIAAABu/GXrAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFb2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI2LTA5LTIwPC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkRhdGE+eyZxdW90O2RvYyZxdW90OzomcXVvdDtEQUdhX1RBd013byZxdW90OywmcXVvdDt1c2VyJnF1b3Q7OiZxdW90O1VBRE12Z05HYlZvJnF1b3Q7LCZxdW90O2JyYW5kJnF1b3Q7OiZxdW90O0VxdWlwbyBkZSBCcmFuZG8gTWFjbyZxdW90O308L0F0dHJpYjpEYXRhPgogICAgIDxBdHRyaWI6RXh0SWQ+OGM4OTIzNjgtMzM2Mi00YmE1LTk2MmEtNTgxNjc1ODgzYWZiPC9BdHRyaWI6RXh0SWQ+CiAgICAgPEF0dHJpYjpGYklkPjUyNTI2NTkxNDE3OTU4MDwvQXR0cmliOkZiSWQ+CiAgICAgPEF0dHJpYjpUb3VjaFR5cGU+MjwvQXR0cmliOlRvdWNoVHlwZT4KICAgIDwvcmRmOmxpPgogICA8L3JkZjpTZXE+CiAgPC9BdHRyaWI6QWRzPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpkYz0naHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8nPgogIDxkYzp0aXRsZT4KICAgPHJkZjpBbHQ+CiAgICA8cmRmOmxpIHhtbDpsYW5nPSd4LWRlZmF1bHQnPk51ZXZvIExvZ28gTkVYVCAyMDI1IC0gQ29ycmVvIC0gMzwvcmRmOmxpPgogICA8L3JkZjpBbHQ+CiAgPC9kYzp0aXRsZT4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6cGRmPSdodHRwOi8vbnMuYWRvYmUuY29tL3BkZi8xLjMvJz4KICA8cGRmOkF1dGhvcj5CcmFuZG8gTWFjbzwvcGRmOkF1dGhvcj4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6eG1wPSdodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvJz4KICA8eG1wOkNyZWF0b3JUb29sPkNhbnZhIChSZW5kZXJlcikgZG9jPURBR2FfVEF3TXdvIHVzZXI9VUFETXZnTkdiVm8gYnJhbmQ9RXF1aXBvIGRlIEJyYW5kbyBNYWNvPC94bXA6Q3JlYXRvclRvb2w+CiA8L3JkZjpEZXNjcmlwdGlvbj4KPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KPD94cGFja2V0IGVuZD0ncic/Pmg3mrsAAABOZVhJZk1NACoAAAAIAAQBGgAFAAAAAQAAAD4BGwAFAAAAAQAAAEYBKAADAAAAAQACAAACEwADAAAAAQABAAAAAAAAAAAAYAAAAAEAAABgAAAAAXcF3+cAAB0bSURBVHic7Z1pQFPH2sefk4WEJCCLbOICaFVURFSsYpXairSKG6C2LrUuva0o4lbhreBVW+FevVpES12o1qteKuJWbbSIO0Ur0EIFFwqCrMq+BMie90PwcAwBAiS2p31+nzKTOXNmJuc/yzPPnBAqlQoQBKEnjD+6AAiCdB0UMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BgUMILQGBQwgtAYFDCC0BjWK7iHXC5PT09PTU1NS0urrKxsaGiQy+UCgcDU1NTR0XHgwIGenp59+vR5BSVBkL8YhEqlMlzuGRkZZ86cEQqFNTU1VlZWw4cPt7a2FggEbDa7rq6uqqoqOzs7Ly9PoVC4urouXLjQx8eHxXoVfQqC/DUwlIALCwv//e9///jjjw4ODn5+ftOnT7e3t9easr6+/vbt20Kh8MqVK3Z2dmvXrp05c6YhioQgfz0MIuDjx49HREQIBILg4GBfX18dryoqKvr666/j4uJcXV3/85//ODg46L1gCPIXQ88CFovFwcHBQqFw6tSp27Zt69GjR2dz+OWXX4KDgysrK6Oiot544w09lg3RBYlEIpfLySCXy2UymX9gef6ENDU1KZVKMsjj8QiC+KMKo08B19XVffzxx+np6Zs2bVq4cGGX86mvr1+zZk1ycnJ0dPSkSZP0VTxEF9auXXvx4kUyeODAgbfeeusPLM+fEG9v7ydPnpDBW7du2dnZ/VGF0ZvFSCKRfPDBB0+ePDlw4MDEiRO7k5WJicnBgwcDAwMDAwOPHDni7u7e4SUXLlw4d+6c+jOXy92+fbuZmVlbiZ8+fbpt2zYyaGFhsXPnzu4U+E/C48ePd+zYQQbNzMx27dr1B5bnFfA3rLIGehPw9u3bHz58+O23344bN677uTGZzC+//HLx4sUBAQHnz5/v1atX++mfPn1669YtMigSib755pu2DNr19fXUxH9g90klOTm5oqKCDE6YMMHc3LxTOdTW1lLrZW1trbfC/Vn5G1ZZA/0I+M6dO7GxsevWrdOLetVwOJyoqCgfH59Vq1adOnWqUyux5OTkiIiIsLAwfRXmFbB///47d+6Qwfj4+M4KGPkbogdPLJVKFR4ePnLkyBUrVnQ/NyrW1tbh4eH3798/fvx4Z6/973//GxcXp9/yIMifDT0IuLa2ls/nU1eVemTy5Mmenp579+5tamrq7LVbtmxJS0szRKkQ5E+CHqbQZmZm3333XffzaYugoCBfX98zZ84sWLCgUxfKZLKVK1eeOXOmwyV0W0gkkmvXrv30009Pnjypr6/ncrm9e/d2d3f39va2tLSkplQoFJGRkQ0NDWTMiBEjZsyYoZHh7du3r1+/Tgbt7e19fX2Li4sBgHotADx58oRcNdjY2FhZWXWtClqpqqoSCoUpKSnFxcUSicTCwsLV1XXmzJn9+/fXMQfdW4aKSqXKysq6e/fugwcPSkpKRCIRl8vt0aOHs7Ozh4fHuHHjXvF+TFNTU3JyclpaWk5OTkVFhUwmEwgENjY2Li4u3t7evXv31jEfqVQqFApv3br19OlTmUxmbm4+ZMgQLy+vkSNHGrT8YCBHjgalAgD4DM1VqwpU6VKRm5FJ60tOQ/0U4Ju0MSPw8/MjCCI+Pr6tO+7bt2/Pnj1avxoyZMh3331nbGxMxmRmZs6ePZsM2tnZUQ0hzUVVqeLi4iIjI6mGJRIOh7No0aLVq1dTs71w4cK6devIIIvFOnny5PDhw8mYwsLCWbNm1dXVqYNsNjs2NjYnJyckJKSteqnZsGHDxx9/3H4aALh37x61j7O2tv7pp5800shksujo6JiYGLFYrPEVg8H46KOPCgsLhUIhGdl6G6kLLQMACoXi1KlT33zzTX5+flvl79+/v3ot1kE9KehSZa2UlZVFR0efPXu2sbFRawIGgzF9+vSwsLDWvgwa20j79+8PDw8vKChonYm7u/vnn3+ue7fYBQxyGqleqciWNdYo5RrxShWcbay42FihbNVrxEDtOCgoAJnWDH18fDIyMkpLS7tQmAcPHoSEhHSqn5LJZGvWrAkNDdX6jAKARCKJiYmZP39+dXU1GTl9+vT33nuPDMrl8rVr14pEImqepHoBICQkxNXVtXOV6R5isXjZsmX79u1rrV4AUCqVBw4cSExMbCeHrrUMAJw/fz4sLKwd9QJAbm7u/PnzExISOq5Jt1m3bt2JEyfaUi8AKJXK8+fPz5kzp6qqqv2sVq9erVW9AJCSkuLn53f37t1ulbVdDCJgSyZLBZAra3qukFLjmQQxgGV8T1p/vOG5RKWkfuUPJlkgHQMFKaDl2VIPAj///HPXyiMUCqOjo3VPHxoaSh2FAIAgCFNTU419qczMzICAAIVCQcZs2rRp0KBBZLCgoGDLli3qzzt37vztt9/Ir959991FixZ1phJ6IDQ0lGro1opUKm3n2y63zLRp02xtbTssoUKhCA4Obqt30CPLly/XJVleXt7WrVvbT9N+izU0NAQEBLSl8O5jEAGzCUZPJhsAiuSSp3KxClpGv4lcMwDIkTcdrC+ppgzRH4CpPbCeg2IiFJ6Geo0M+/XrZ25ufv/+fR0LMGnSpJ49e1Jj9uzZc+XKFV2uTUxMPHPmDBk0NjYOCQlJSUlJS0vLyMiIjo6mnspITU2NjY0lg1wud+/evXw+n4w5f/782bNnr169euTIETLSwcEhPDxcvd7r16+fn5+fn5+fxh7mpEmT/F5A7RS6zJ07d86fP0+NEQgE//jHPw4ePHj48OH169d3uInanZbhcDgBAQEAYGlpuWzZskOHDgmFwqtXrx49elTDW14kElEvNBCenp4jRowAgBEjRmzatOnkyZNXr14VCoU7d+4cOHAgNeWlS5eKioraz40giKlTp0ZGRh49ejQ8PHzUqFHUb+vr6z///HO9V0GNoc7u2TCNKhQyFUCFQiZRKvuzjZkEAQAOLG5fFqdALilXyg7WFy/g2/RmcQGADUQImAdCuRhU/lAaDrL/Awtqhk5OTh22I4mdnd2KFSsWLlxI9o4qlerTTz+Ni4vT+Hlas3fvXvIzQRDR0dGkS7aRkZGXl5fa3kOOEjExMQsWLCCtL46Ojtu2bVu/fj2ZydatW6kDlFrkAoFAHRw9evTo0aMB4IMPPigrKyOTrVy5Ur8T7MOHD1ODtra2x48f79evnzo4YcKE9957b8mSJZmZmW3l0M2W8ff3b2hoWLRoEYfDIfPp27evh4eHra0tdYp08+bNwMDAbtW2IwiCCAkJaWpq0vC3f+2116ZMmTJ79mxylatSqW7dujV//vx2stq9e7ePjw8Z4+/vHxERQe2yb9y4kZuba4jFsKHeyMEhGBYMtvpzvUrxSNZIzpk9Oc1Ojg0q5TeiZ5nSZuvrcjCzgWa712dQ8SE8k1KGbltb2/Lyct0L4ObmprGz1dDQ8Mknn2iszTTIy8t78OABGfT09Gx9oMLa2ppqUiouLqZeAgAzZsyYO3cu9b61tbVkcPPmzYMHD9a9InpBLBYnJydTY7744gtSvWrMzMy+/PLLthxmut8ybDZ7+fLlVPWSLFmyhBrMzc3toD76YNSoUVpPy/B4PKoto8PyzJkzh6peeNE7aPzKV69e7UZh28SAp+dtWUaV0majlFilfCRtHGLEZxPEa2xeL6ZRiUIKAApQxTWWKcDK1UjABWIDmH8Kzf33UagrANk1aH5TB5fLbX+x0Ro/P7/Hjx9TO8LCwsLVq1dTh0cNMjIyqEGRSKTVTZo6VAJAVlbW0KFDqTFhYWEZGRmPHz/WuNDX13fOnDm6V0Ff5ObmUlvPyspKq7+6g4PD6NGjtdoa9NUyVVVV6enp+fn5IpFIIpGQ8SwWizwFJRKJlEolg/Eq3veUnZ398OHDZ8+eNTQ0kIt2qpEZAKimx9ZQdzRIGAzG7NmzIyIiyJiHDx/qo7yaGFDAGj051QpsRGj/bQQvzwioZi6lUtmFc23BwcE5OTm3b98mY+7evUt1f9dAY5BPTU1NTU3t8C6VlZUaMVwuNyoqatasWVT/kz59+pA2rVeMhinV0dGxrR1XJycnrQLufssUFhZGRERcu3aNatxqi1cg4MuXL+/evTsvL6/DlO0X2MnJSWu8o6MjNdihNbtrGLCNnila9oQ4BGOwEY9NEABQLJfky5tNzUwAf56Vq5EAABSg2gUt89t5YPIjtOykV1dXd+F0MZPJjIyM1GjKlJSUttLr0ZGgpKSEOsIAQGlpqYG64Q7RqBf1OKsGbe23dbNlcnNz/f39r1y5oot6XwExMTGBgYG6qLdD2moxjXgD+agYagSWq1QVL/aQBASzP9uY9aICNyQ16g9cgvE+39qR1bzj/z+oz3mxDxwCFhHwkhm5oKCga34tpqam+/fv9/f3r6/XNG63xsbGhhocO3asv79/h1e5uLhoxJSWlq5fv15DJ3K5fM2aNefOnbOwsIBXi4ZNPjc3t60h7vfff9eaQzdbZsuWLdQhyNnZedq0aVZWVuSsKjQ0VOvutCEoKCignjpkMBjTpk0bNWoUn89Xy+z+/ftHjx7VMbfff/9dq/OZRku246DWHQwl4GcKqfrhNWewHFhcxgv1PlNIH8saAcCMwVrEt7FiGpGXhEOVukAHwGYpvDTYNjU15efnz5s3r2uFcXJyioyM/Oijj9oZedSotxZIcnNzvby8eDxep24nk8mCgoK0TplKS0s3btx48ODB1uLRfZDsAk5OTlwul1RIdXX1lStXvL29NZJlZ2f/8ssvWnPoTstUVVVRp+UDBgw4ffo0m82mptm6desrE3BiYiL1rSNBQUHqLS4SHo+nu4BPnTo1duxYjUi5XE7dcgMAqi2gAGRXoZEDxDvAt9Bca3YOg0yh5SpVuUIKADZMIye2MYPyaN4QVwOAPZPzsaAXVb2noP4RSE2AcQnsNdQLACkpKUql8vXXX+9ykSZOnLhx48YOk/Xp08fNzY0MlpeXr127trW/Tk1NTXBwcElJidZMduzY8euvv5LB8ePHU52xb968eeDAgdZXmZi85GHavtNSZzEyMtKwWv3zn//UsLGVlZUFBQW1NSHsTss8f/6cmu3AgQM11Jufn6/hCm5QNFz6hg0bppEgKytL99y+//57jY1rhUKxefNmqiWMIIjJkyerP5+E+oGQvxSeL4BnAyE/TZvnku4YZASuVMqUAH1ZXCvmS7+TQqV6IGt0ZvP8edbslwec41DXB1hCsB8GWrYZrl271rNnTw17ZmdZtmxZdna2Rr/YmjVr1ixevJh6a29v77lz57q6uvL5/KqqqtTU1Pj4+Lq6ul9//TU2NlZjavTjjz9+++23ZNDa2nrXrl1PnjxZuHAhOaju2bNn1KhRY8aMoV6osUm4c+dODofTp0+fR48esdnsWbNmdanSLSxfvpzqpVhZWenr6zt79mx3d3cWi5WZmRkXF9e+ubXLLaPxdpTk5OSioiLyqEBxcXFgYKBeZhw1NTWffPJJ+2mioqI0ynP69Onx48eTk3mhUHjw4MFO3Xfz5s0JCQleXl4WFhbFxcVnz57V6Bzfeeedvn37AoAYVJ/Ac8kLk24lKFZC2V3o26nbUTGIgPkEcyDb2IShmTmDAB9jS3cjk9YL+oVg+jUY99JWHqlUevHiRerOapfZtm1bXl4edXhsjYeHx/Lly2NiYsiYZ8+eRUVFtU6Zl5e3fPnyY8eOkV4Z+fn51JMJDAZj9+7dlpaWlpaWK1as+Oqrr9TxCoVizZo133//PXVpOnnyZKozQ3l5eVBQkPpz//79Z86c2U0riJub24IFC06cOEHGSKXSkydPnjx5UsccutwydnZ2gwYNIp/pmpqaqVOnTpgwwdLSsri4+O7du53dIGwLqVTa4XarQqF48803IyMjyRihUJiZmenu7k4QxP3791tv/ulCUlJSUlKS1q8sLCw2bdqk/pwL0pqXdlcgAyTaLtIVg0yhBQxma/UCAAHEGI6p1gdxDphoVS8AxMfHi0SidlxhdIfD4Xz11VcdOuVu3LhRl9M/ACAQCMjVrFgsDgwMJE8vAMDKlSvJaf+qVauoy8jy8vL169dTTbIuLi5tvRA7Nzc3PT1dl/K0z6ZNm1qvezVo36Gyay2jvjV1F7CpqSkhISE2NvbWrVtq9b7Kv+YYOnSon58fNaagoOD06dPx8fFq9ep+kNDY2JjsvrViYWERExNDmgDtgKWx5LX7E66B9UhDQ0N0dPTs2bN1b9P2sbKy+vrrr7lcbjtpCILYsGHDiRMnqKs+DUxNTdetW3fkyBHSkLN169ZHjx6RCcaMGbNy5UoyyGKxdu/eTf2xk5OT9+3bR81z+/btbZl2dTwl1z5sNjsqKio0NFTrG/9YLFZAQED7Xv5daxkAGDdu3P79+7WeajYyMtqyZYvGgsLQfPHFF4sXL9bqWeDg4BATE6PjfMfU1PT48eMa+5QkXl5e586do25SWABzBbzU+J9Bt6zTejsPXFhYaIhOdMuWLWfPnk1ISNDYxtDg3r171ENbLi4u7b+PNikpiTS3mpiYaLjyUcnOzk5KSnr8+HFFRYVUKuXz+X379h05cuTEiROpD2h5ebmGJWPevHmty0y9LwAwGIylS5dq2HKzs7MTEhIePXpUX1/P4XAcHBw8PT09PDw6fKSKi4tPnz5NBvl8/rJly7SmbGxsvH79ekpKSlFRkVQqNTMzGzZs2LRp0+zt7dPT06mno6dPn97W06ljy1Bpamq6cuXKvXv3SkpK5HK5ubn5sGHDfHx87OzsEhMTqX6Xq1at0sWRQ6PKurBixQrShFZQUHD58uWsrKzq6moWi9WrV6+xY8dOmTLFyMho7969pDQGDRpEnbkcO3aMdMgVCARLly6Vy+XXrl1LTk4uKChQKBTm5ubOzs5eXl5afTyUoPoaas+DiAvEUugxC9obwDtEbwL28/Pr1atXYGBgh6cFdCcxMXHFihWfffZZOwJDkL8zeptCu7i4XL58edq0aQEBAa1dC7tAVlbWhg0bPD09Ub0I0hZ6EzC5x8NisbrvdJKRkfHhhx86Ozu39aIcBEFAvyNw7969p0yZcunSpejo6O5s66nfX+fm5nb48GHq4XgEQTTQ2xpYLpfX1dVZWFjs2LHj0KFDbm5umzdvbu3j0j6lpaURERGXLl1asGBBWFgY/q0WgrSPQd5KmZycHBYWVlBQ4O3tHRQU9Nprr3V4SWlp6bFjx44ePcpisUJCQt5//329lwpB/noY6g++pVLpsWPHDh06VFlZOXLkyLffftvd3d3Z2Zm6ASuTyR4+fPjbb78lJibeuXNHqVT6+/uvW7dOv+9ARpC/MIYSsBqJRCIUCs+cOZOSkqL2OrKxsWGxWDKZTCQSka7wQ4cOnTp1qo+PT5ffwI4gf08MK2ASsVj84MGD3NzcoqKi2tpamUzG4/EEAsGQIUNGjx6N/+KFIF3jFQkY0RdXjzTVV6nK8hU2jswRXkb9XFgAEB/RwOYQKoCe9ow35rUsUqRNquObREt2mZBOXAq56vZ3kjcXNqc5/a+Gaat4XAEBANeONr212Ji8y9tLmj+nJ0jZXBg60QgArn0rfuvDlvxTLkieZskZTLBxZI731+KdWl+pvH1SAgBey7hsjhZPMrlUdeUbcVO9UqmE0VM5DsOb/eEfJEkfJskJJphZE5MWcQlG87WxWxrmhvKYLEIsUqVdlo73bz67dv1YU32FSqmEsbM5tk5MAHh8V8brQfRxZgHA9f+KJ33QXLy8dLlKBU5uLY73d85IyvIVz/MUNo7Mga+zncc3+2lVlyp+PCR+b3PLPkheurw0R+7hzwWAlIuSQWPZpj2b93GybkkfJMlYbMLcluG5kEsQkJ4otXFk2vVnqgvguYDDYOr/pRwGfCcWYgjeXmKsVMLJbQ0z17W4K0qawP//eABw7ag4J002YFTzI5h0StzXhZV1Uzrszeaj1yollOW3nKAoL1DGfdGwKEJAEPA8r2Xnj/q5+rkyPUFq7ci06sN8Trk29QeJTKryD+EDQGWR9hfl5KTJXxvDepajqC1X9uytZU/h3K7Gcb4c+0EslQoqi5szyf1Flpcu9wvhAUBOquzyfvG7Ac29SfFj+fndjb4b+QqFqqKwOX31M6WoSjVjLQ8A5LLmAam+Ukm8ePUatdiiGuXL/ykA43w5AHBi80tNCgC3vpP06EmU5sjtBrDIa2/+T2I3gOk4gl1VopS/OEOVmybLy5DP+YwPABWFCnV3OWwiO3Zrw8IvBPkZMq4JYQj1wp//MAPSKYwFQP4ZhlKhKstTvv2h8W/X2zysZ9KTMWYG5/L+Nv9hRM2sDbxz/2mUNr00Wcv+Webh1zyscU20P52Dx7FjtzQQBGhVLwBIG1X2g1gAQE2T+oPU++NmxQ4Yza4saZGf3QCWbX/Wz+deOoJn2pOoKlUmHGoqzVGw2PrRSVO9SimHt5cYJ8W9dK93VxjfOCauq3ipD0gVSt/5pLnAPfs014JlRIyeyrl7VnLvgnTsLC2n3PUCCvivQM1zxYWophNhouJsxcCxzcPvL5elSoXq7llJbZnqaabm/1SRDPZgs4yIzJvtncjlGBMz1/FORbysc4JQKpol/cNe7X/++n1kY2CMaeED+b3vJVpHaaW2BZwRl5A0tnyhMWB6+HEKH8qLHrbkxmQRi/8lGDOD89tV6Y3jL96XyCbIHkcp7/Q68cZxMcsI0i5Jix7Ka8taSsBgwpxQ/qnwBmqeGgUmcR7PzkiUjp/DMdyfLqKA/wqY2TCnrzb2C+ZLKa9nefiT7N0A3mAP9txQXnJ8e6fGJy81Tr8ilYnbe8qt+zFdJrFTf2jJx8OPEx/RKG5QySQq6iNOpalO2cOamLzM+FR4A99My8NmP5CZFCdWKlS1ZcoHSc2vNJz4Pud0RKOoWimXqRJimgZ7sDWumv0p79rRlqrWPFfmpsnMbBhu7xhVlzaXxMmNlSqUyiSqqhKFrJPvC5DLVFXFijfmcQd7sOeG8slOQY3AnOG1zPj6sZbICe9z4sMbRdVKhVyVclFCNStZ9mao1+QGgvlHvakY6RYE2Di89FjYODJZRkQPa4ZCquKZMhprlT2sGfaDWMYCgmfKUCnBqi9DbQoiGGDdj0m9kCBg0Dg2i01QHzUbx5bP5rYMDo+wcWSa2zHUM14AMLNhWPVlJsWJs+/JJ8zj9rDSok8Le2ZyvLT6mXJuKL+8QGluq5nG0ZXdWKdKjpeU5SuGT2KzuQQA8EwZ/VxYyfGSR8ky5wlGQycYUS+xcWQyGMTA19lcHqGer3L4xJN0eeoP0ppnysnLjJksAgC4fKJnb8bNE5Ln+cqpAcZUE1rWDVn2PVn2zzLrfkxjyuSfrHJVibLPEJa1A9NYQJj2ZIgbVGTLCMwYAnNGD2uG7QCmjQNTnS3PlOEwnPVTvORRsszJjW1u81I1rfsxSSOc3kErNILQGJxCIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiNQQEjCI1BASMIjUEBIwiN+X/ClTQ7cwPTbgAAAABJRU5ErkJggg==" alt="Next Idea Lab · Training &amp; Consultancy" width="320" height="132"></div>
+    </header>
+
+  <div class="grid">
+    <form id="survey" autocomplete="off">
+      <ol class="items" id="items"></ol>
+    </form>
+
+    <aside>
+      <div class="panel">
+        <h2>Cómo responder</h2>
+        <p>1 = totalmente en desacuerdo<br>7 = totalmente de acuerdo</p>
+        <p>Todas las afirmaciones son positivas: a mayor puntaje, mayor seguridad.</p>
+        <div class="progress" id="progress" aria-hidden="true"></div>
+        <div class="count" id="count">0 de 7 respondidas</div>
+      </div>
+      <section class="legend" aria-labelledby="legendTitle">
+        <h2 id="legendTitle">Niveles de seguridad</h2>
+        <ul>
+          <li><span class="dot hi"></span><div><b>Alta</b> <em>39–49 pts · promedio 5,5 a 7</em><p>Se puede hablar, arriesgar y equivocarse sin temor. El reto es cuidar las prácticas que la sostienen.</p></div></li>
+          <li><span class="dot mid"></span><div><b>Moderada</b> <em>28–38 pts · promedio 4 a 5,4</em><p>Hay confianza en algunos temas y cautela en otros. Los ítems más bajos muestran por dónde empezar.</p></div></li>
+          <li><span class="dot lo"></span><div><b>Baja</b> <em>7–27 pts · promedio menor a 4</em><p>Hablar o mostrarse vulnerable se percibe riesgoso. Conviene abrir espacios donde todas las voces se escuchen con seguridad.</p></div></li>
+        </ul>
+        <p class="note">Rangos orientativos para la reflexión, no un diagnóstico clínico.</p>
+      </section>
+      <section class="result" aria-live="polite">
+        <h2>Tu resultado</h2>
+        <div id="resultBody"></div>
+      </section>
+    </aside>
+  </div>
+
+</div>
+
+<script>
+const ITEMS=[
+  {t:"Si cometo un error en este equipo, se trata como una oportunidad para aprender.",inv:false},
+  {t:"Los miembros de este equipo pueden plantear problemas y temas difíciles.",inv:false},
+  {t:"En este equipo, se acepta y valora a las personas por sus diferencias.",inv:false},
+  {t:"Es seguro asumir un riesgo en este equipo.",inv:false},
+  {t:"Es fácil pedir ayuda a otros miembros de este equipo.",inv:false},
+  {t:"Confío en que los miembros de este equipo apoyan mis esfuerzos.",inv:false},
+  {t:"Al trabajar con este equipo, mis habilidades y talentos se valoran y se aprovechan.",inv:false}
+];
+const SHORT=["Errores","Temas difíciles","Diferencias","Riesgos","Pedir ayuda","Confianza","Talentos"];
+const PROMPTS=[
+  "¿Qué pasó la última vez que alguien del equipo se equivocó?",
+  "¿Qué tema importante se evita en las reuniones?",
+  "¿Qué perspectivas distintas cuesta escuchar en el equipo?",
+  "¿Qué idea no propusiste por miedo a que fallara?",
+  "¿Qué haría más fácil pedir ayuda sin sentirte expuesto?",
+  "¿Qué señales te harían confiar más en las intenciones de los demás?",
+  "¿Qué habilidad tuya está desaprovechada hoy?"
+];
+const answers=new Array(7).fill(null);
+const list=document.getElementById('items');
+
+ITEMS.forEach((it,i)=>{
+  const li=document.createElement('li');li.className='item';li.id='item'+(i+1);
+  let opts='';
+  for(let v=1;v<=7;v++){
+    opts+=`<input type="radio" name="q${i+1}" id="q${i+1}v${v}" value="${v}"><label class="opt" for="q${i+1}v${v}" aria-label="${v}">${v}</label>`;
+  }
+  li.innerHTML=`<span class="num">${i+1}</span>
+    <p class="q">${it.t}${it.inv?' <span class="inv" title="Puntuación invertida: 7 cuenta como 1">(I)</span>':''}</p>
+    <fieldset><legend>Afirmación ${i+1}</legend>
+      <div class="scale"><span class="end l">Totalmente en desacuerdo</span>${opts}<span class="end r">Totalmente de acuerdo</span></div>
+    </fieldset>`;
+  list.appendChild(li);
+});
+
+const prog=document.getElementById('progress');
+for(let i=0;i<7;i++)prog.appendChild(document.createElement('i'));
+
+document.getElementById('survey').addEventListener('change',e=>{
+  const m=/^q(\d)$/.exec(e.target.name);if(!m)return;
+  const i=+m[1]-1;answers[i]=+e.target.value;
+  document.getElementById('item'+(i+1)).classList.add('done');
+  render();
+});
+document.getElementById('survey').addEventListener('submit',e=>e.preventDefault());
+
+function adj(i){const v=answers[i];return v==null?null:(ITEMS[i].inv?8-v:v)}
+
+function render(){
+  const n=answers.filter(v=>v!=null).length;
+  [...prog.children].forEach((el,i)=>el.classList.toggle('on',answers[i]!=null));
+  document.getElementById('count').textContent=`${n} de 7 respondidas`;
+  const body=document.getElementById('resultBody');
+  if(n<7){
+    body.innerHTML=`<p class="pending">Responde las 7 afirmaciones para ver tu puntaje. ${n?`Faltan ${7-n}.`:''}</p>`;
+    return;
+  }
+  const scores=answers.map((_,i)=>adj(i));
+  const total=scores.reduce((a,b)=>a+b,0);
+  const avg=total/7;
+  let cls,label,msg;
+  if(avg>=5.5){cls='hi';label='Seguridad alta';msg='Percibes un equipo donde se puede hablar, arriesgar y equivocarse. Piensa qué prácticas lo sostienen y cómo protegerlas.';}
+  else if(avg>=4){cls='mid';label='Seguridad moderada';msg='Hay confianza en algunos frentes y cautela en otros. Los ítems más bajos muestran dónde empezar.';}
+  else{cls='lo';label='Seguridad baja';msg='Hoy percibes riesgo en hablar o mostrarte vulnerable. Es una buena señal para elegir estructuras que den voz a todos de forma segura.';}
+  const min=Math.min(...scores);
+  const lowIdx=scores.map((s,i)=>s===min?i:-1).filter(i=>i>=0);
+  const pct=(total-7)/42*100;
+  body.innerHTML=`
+    <div class="score"><strong>${total}</strong><span>de 49 · promedio ${avg.toFixed(1).replace('.',',')}</span></div>
+    <span class="band ${cls}">${label}</span>
+    <div class="meter" role="img" aria-label="Puntaje ${total} en una escala de 7 a 49"><b style="left:${pct}%"></b></div>
+    <div class="ticks"><span>7</span><span>28</span><span>39</span><span>49</span></div>
+    <p class="msg">${msg}</p>
+    <ul class="bars">${scores.map((s,i)=>`<li class="${lowIdx.includes(i)&&min<6?'low':''}"><span>${i+1}</span><div class="track" title="${SHORT[i]}"><div class="fill" style="width:${s/7*100}%"></div></div><span>${s}</span></li>`).join('')}</ul>
+    ${min<6?`<div class="reflect"><b>Para reflexionar (ítem ${lowIdx[0]+1} · ${SHORT[lowIdx[0]]}):</b> ${PROMPTS[lowIdx[0]]}</div>`:''}
+    <button type="button" class="reset" id="reset">Borrar mis respuestas</button>`;
+  document.getElementById('reset').onclick=()=>{
+    document.getElementById('survey').reset();answers.fill(null);
+    document.querySelectorAll('.item').forEach(el=>el.classList.remove('done'));
+    render();window.scrollTo({top:0,behavior:'smooth'});
+  };
+}
+render();
+
+</script>
+</body>
+</html>
